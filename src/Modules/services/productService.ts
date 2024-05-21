@@ -20,12 +20,15 @@ const updateProduct = async (
   return await ProductModel.findByIdAndUpdate(id, product, { new: true });
 };
 
-// const deleteProduct = async (id: string) => {
-//   return await ProductModel.findByIdAndDelete(id);
-// };
-
 const deleteProduct = async (id: string) => {
   return await ProductModel.findByIdAndDelete(id);
+};
+
+const searchProducts = async (searchTerm: string) => {
+  const regex = new RegExp(searchTerm, "i"); // Case-insensitive search
+  return await ProductModel.find({
+    $or: [{ name: regex }, { description: regex }],
+  });
 };
 
 export const ProductServices = {
@@ -34,4 +37,5 @@ export const ProductServices = {
   getProductById,
   updateProduct,
   deleteProduct,
+  searchProducts,
 };
