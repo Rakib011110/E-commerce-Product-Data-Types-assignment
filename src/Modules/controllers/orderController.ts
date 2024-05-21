@@ -46,16 +46,20 @@ const getOrders = async (req: Request, res: Response) => {
     });
   }
 };
-
 const getOrdersByEmail = async (req: Request, res: Response) => {
   try {
-    const orders = await orderService.getOrdersByEmail(
-      req.query.email as string
-    );
+    const email = req.query.email as string;
+    if (!email) {
+      return res.status(400).json({
+        success: false,
+        message: "Email query parameter is required.",
+      });
+    }
+    const orders = await orderService.getOrdersByEmail(email);
     res.status(200).json({
       success: true,
-      data: orders,
       message: "Orders fetched successfully for user email!",
+      data: orders,
     });
   } catch (error: unknown) {
     let errorMessage = "Something is wrong";
